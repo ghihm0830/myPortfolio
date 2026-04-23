@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paylo — Case Study · Hyeonin Riley Gu</title>
+  <meta name="description" content="Paylo: All-in-one finance web app. A UX case study by Hyeonin Riley Gu covering research, information architecture, wireframing, and high-fidelity prototyping." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #1a1814;
+      --ink-2:     #5a5750;
+      --ink-3:     #9a9690;
+      --paper:     #faf9f7;
+      --paper-2:   #f2f0ec;
+      --paper-3:   #e8e5df;
+      --accent:    #c8603a;
+      --accent-lt: #f0ebe6;
+      --paylo-dark:#0f0e0d;
+      --paylo-mid: #1c1a18;
+      --serif:     'DM Serif Display', Georgia, serif;
+      --sans:      'DM Sans', sans-serif;
+      --max:       780px;
+      --max-wide:  1100px;
+      --gutter:    clamp(1.5rem, 5vw, 4rem);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem var(--gutter);
+      background: rgba(250,249,247,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--paper-2);
+    }
+    .nav-logo { font-family: var(--serif); font-size: 1.05rem; color: var(--ink); text-decoration: none; }
+    .nav-back {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; color: var(--ink-2); text-decoration: none;
+      letter-spacing: 0.03em; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      padding-top: 7rem;
+      padding-bottom: 0;
+      background: var(--paylo-dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-inner {
+      max-width: var(--max-wide);
+      margin: 0 auto;
+      padding: 5rem var(--gutter) 0;
+    }
+    .hero-eyebrow {
+      display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem;
+      opacity: 0; animation: rise 0.6s 0.2s ease forwards;
+    }
+    .pill {
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.3rem 0.9rem; border-radius: 100px;
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .pill-accent { background: rgba(200,96,58,0.25); color: #e8926e; border-color: rgba(200,96,58,0.3); }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: #faf9f7;
+      opacity: 0; animation: rise 0.8s 0.35s ease forwards;
+    }
+    .hero-title em { font-style: italic; color: #e8926e; }
+
+    .hero-subtitle {
+      margin-top: 1.75rem;
+      max-width: 560px;
+      font-size: 1.05rem; font-weight: 300;
+      color: rgba(255,255,255,0.5); line-height: 1.8;
+      opacity: 0; animation: rise 0.8s 0.5s ease forwards;
+    }
+
+    .hero-stats {
+      margin-top: 3.5rem;
+      display: flex; gap: 0; flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      opacity: 0; animation: rise 0.8s 0.65s ease forwards;
+    }
+    .hero-stat {
+      flex: 1; min-width: 140px;
+      padding: 2rem 1.5rem;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero-stat:last-child { border-right: none; }
+    .hs-num {
+      font-family: var(--serif); font-size: 2.8rem;
+      color: #e8926e; line-height: 1;
+    }
+    .hs-label { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 0.4rem; letter-spacing: 0.05em; }
+
+    /* Dark Paylo mock strip */
+    .hero-mock {
+      margin-top: 4rem;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px 16px 0 0;
+      overflow: hidden;
+      opacity: 0; animation: rise 0.9s 0.8s ease forwards;
+    }
+    .mock-screen {
+      background: var(--paylo-mid);
+      padding: 1.25rem;
+      min-height: 220px;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .mock-label {
+      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25); margin-bottom: 0.25rem;
+    }
+    .mock-title { font-family: var(--serif); font-size: 0.95rem; color: rgba(255,255,255,0.8); }
+    .mock-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
+    .mock-bar-fill { height: 100%; border-radius: 3px; }
+    .mock-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.4rem 0.5rem; background: rgba(255,255,255,0.04); border-radius: 6px;
+    }
+    .mock-dot { width: 18px; height: 18px; border-radius: 5px; flex-shrink: 0; }
+    .mock-txt { font-size: 0.6rem; color: rgba(255,255,255,0.5); }
+    .mock-amt { font-size: 0.6rem; color: rgba(255,255,255,0.35); }
+
+    /* ── MAIN CONTENT ── */
+    .content {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+    .content-wide {
+      max-width: var(--max-wide);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    /* ── SECTION BASE ── */
+    .section { padding: 6rem 0; }
+    .section + .section { border-top: 1px solid var(--paper-2); }
+
+    .section-label {
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-3); margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      line-height: 1.1; color: var(--ink);
+      margin-bottom: 1.75rem;
+    }
+    .body-text {
+      font-size: 1rem; font-weight: 300; color: var(--ink-2); line-height: 1.85;
+    }
+    .body-text p + p { margin-top: 1.25rem; }
+    .body-text strong { font-weight: 500; color: var(--ink); }
+
+    /* ── OVERVIEW GRID ── */
+    .overview-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2px;
+      background: var(--paper-2); border-radius: 16px; overflow: hidden;
+      margin-top: 3rem;
+    }
+    .ov-cell {
+      background: var(--paper);
+      padding: 1.75rem;
+    }
+    .ov-cell-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 0.6rem; }
+    .ov-cell-val { font-size: 0.95rem; color: var(--ink); line-height: 1.6; }
+    .ov-cell-val strong { font-weight: 500; }
+
+    /* ── INSIGHT CARDS ── */
+    .insight-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--paper-2); border-radius: 16px; overflow: hidden;
+      margin-top: 2.5rem;
+    }
+    .insight-card {
+      background: var(--paper);
+      padding: 2rem;
+    }
+    .insight-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--accent-lt); display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    .insight-title { font-size: 1rem; font-weight: 500; color: var(--ink); margin-bottom: 0.6rem; }
+    .insight-body { font-size: 0.9rem; font-weight: 300; color: var(--ink-2); line-height: 1.75; }
+
+    /* ── PERSONAS ── */
+    .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+    .persona-card {
+      border: 1px solid var(--paper-2); border-radius: 16px;
+      overflow: hidden;
+    }
+    .persona-header {
+      padding: 1.5rem 1.75rem;
+      background: var(--paper-2);
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .persona-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif); font-size: 1.1rem; color: var(--paper); flex-shrink: 0;
+    }
+    .persona-name { font-weight: 500; font-size: 1rem; color: var(--ink); }
+    .persona-role { font-size: 0.8rem; color: var(--ink-3); }
+    .persona-body { padding: 1.5rem 1.75rem; display: flex; flex-direction: column; gap: 1rem; }
+    .persona-row-label { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 0.3rem; }
+    .persona-row-val { font-size: 0.875rem; color: var(--ink-2); line-height: 1.6; }
+    .persona-quote {
+      font-family: var(--serif); font-style: italic;
+      font-size: 1rem; color: var(--ink); line-height: 1.6;
+      padding: 1rem 1.25rem;
+      border-left: 2px solid var(--accent);
+      background: var(--accent-lt);
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* ── JOURNEY MAP ── */
+    .journey-strip {
+      margin-top: 2.5rem;
+      overflow-x: auto;
+      border-radius: 12px;
+    }
+    .journey-table {
+      width: 100%; min-width: 700px;
+      border-collapse: collapse;
+      background: var(--paper);
+      border: 1px solid var(--paper-2);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .journey-table th {
+      padding: 0.75rem 1rem;
+      font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-3); background: var(--paper-2);
+      text-align: left; font-weight: 400;
+    }
+    .journey-table td {
+      padding: 0.9rem 1rem;
+      font-size: 0.8rem; color: var(--ink-2); line-height: 1.55;
+      vertical-align: top;
+      border-top: 1px solid var(--paper-2);
+    }
+    .journey-table td:first-child { font-weight: 500; color: var(--ink); white-space: nowrap; }
+    .emotion {
+      display: inline-block; padding: 0.2rem 0.7rem; border-radius: 100px;
+      font-size: 0.7rem;
+    }
+    .emotion-bad { background: #fdecea; color: #a33; }
+    .emotion-ok  { background: #fff8e6; color: #885500; }
+    .emotion-good{ background: #eaf5ec; color: #2a6b35; }
+
+    /* ── PROCESS TIMELINE ── */
+    .process-steps {
+      margin-top: 3rem;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      left: 20px; top: 0; bottom: 0;
+      width: 1px; background: var(--paper-2);
+    }
+    .process-step {
+      display: grid; grid-template-columns: 56px 1fr;
+      gap: 1.5rem; margin-bottom: 3rem; position: relative;
+    }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--paper); border: 1px solid var(--paper-2);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif); font-size: 1rem; color: var(--ink-2);
+      position: relative; z-index: 1; flex-shrink: 0;
+    }
+    .step-num.active {
+      background: var(--accent); border-color: var(--accent); color: var(--paper);
+    }
+    .step-content {}
+    .step-title { font-weight: 500; font-size: 1.05rem; color: var(--ink); margin-bottom: 0.5rem; }
+    .step-body { font-size: 0.9rem; font-weight: 300; color: var(--ink-2); line-height: 1.75; }
+
+    /* ── SITEMAP RESULTS ── */
+    .results-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .result-card {
+      padding: 1.5rem; border-radius: 12px;
+      background: var(--paper-2);
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .result-section { font-size: 0.75rem; letter-spacing: 0.06em; color: var(--ink-3); }
+    .result-before { font-size: 1.5rem; font-weight: 300; color: var(--ink-3); font-family: var(--serif); }
+    .result-after { font-size: 1.5rem; font-weight: 300; color: var(--accent); font-family: var(--serif); }
+    .result-arrow { font-size: 0.8rem; color: var(--ink-3); }
+
+    /* ── PROTOTYPE FIDELITY ── */
+    .fidelity-tabs {
+      display: flex; gap: 0; margin-top: 2.5rem;
+      border: 1px solid var(--paper-2); border-radius: 12px; overflow: hidden;
+    }
+    .fidelity-tab {
+      flex: 1; padding: 1rem 1.5rem;
+      background: var(--paper); cursor: pointer;
+      border: none; font-family: var(--sans);
+      border-right: 1px solid var(--paper-2);
+      transition: background 0.2s;
+      text-align: left;
+    }
+    .fidelity-tab:last-child { border-right: none; }
+    .fidelity-tab.active { background: var(--ink); }
+    .fidelity-tab.active .ft-label { color: rgba(255,255,255,0.5); }
+    .fidelity-tab.active .ft-title { color: rgba(255,255,255,0.9); }
+    .fidelity-tab:not(.active):hover { background: var(--paper-2); }
+    .ft-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 0.3rem; }
+    .ft-title { font-size: 0.9rem; font-weight: 500; color: var(--ink); }
+
+    .fidelity-content { display: none; margin-top: 1px; }
+    .fidelity-content.active { display: block; }
+
+    .fidelity-panel {
+      padding: 2rem; background: var(--paper-2); border-radius: 0 0 12px 12px;
+    }
+    .fidelity-panel-title { font-weight: 500; font-size: 1rem; color: var(--ink); margin-bottom: 0.75rem; }
+    .fidelity-panel-body { font-size: 0.9rem; font-weight: 300; color: var(--ink-2); line-height: 1.75; }
+    .fidelity-features { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .fidelity-feature {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      font-size: 0.875rem; color: var(--ink-2);
+    }
+    .fidelity-feature::before {
+      content: '→'; color: var(--accent); flex-shrink: 0; margin-top: 0.1rem; font-size: 0.8rem;
+    }
+
+    /* ── OUTCOME ── */
+    .outcome-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .outcome-card {
+      padding: 2rem; border-radius: 16px;
+      border: 1px solid var(--paper-2);
+      background: var(--paper);
+    }
+    .outcome-num {
+      font-family: var(--serif); font-size: 3rem; line-height: 1;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .outcome-title { font-weight: 500; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.4rem; }
+    .outcome-body { font-size: 0.85rem; font-weight: 300; color: var(--ink-2); line-height: 1.65; }
+
+    /* ── LEARNINGS ── */
+    .learning-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+    .learning-item {
+      padding: 1.5rem 1.75rem;
+      border-radius: 12px; background: var(--paper-2);
+      display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start;
+    }
+    .learning-q {
+      font-size: 0.85rem; font-weight: 500; color: var(--ink-3);
+      white-space: nowrap; padding-top: 0.1rem;
+    }
+    .learning-a { font-size: 0.9rem; font-weight: 300; color: var(--ink-2); line-height: 1.75; }
+
+    /* ── NEXT CASE / CTA ── */
+    .cta-strip {
+      padding: 5rem var(--gutter);
+      max-width: var(--max-wide); margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;
+    }
+    .cta-text { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.5rem); color: var(--ink); }
+    .cta-text em { font-style: italic; color: var(--accent); }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem; border-radius: 100px;
+      font-size: 0.875rem; font-weight: 500; text-decoration: none;
+      letter-spacing: 0.02em; transition: all 0.22s ease;
+      cursor: pointer; border: none;
+    }
+    .btn-primary { background: var(--ink); color: var(--paper); }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+    .btn-ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--paper-2); }
+    .btn-ghost:hover { border-color: var(--ink-3); color: var(--ink); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--paper-2);
+      padding: 2rem var(--gutter); max-width: var(--max-wide); margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    footer p { font-size: 0.8rem; color: var(--ink-3); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .overview-grid { grid-template-columns: 1fr; }
+      .insight-grid { grid-template-columns: 1fr; }
+      .persona-grid { grid-template-columns: 1fr; }
+      .results-grid { grid-template-columns: 1fr 1fr; }
+      .outcome-grid { grid-template-columns: 1fr; }
+      .fidelity-tabs { flex-direction: column; }
+      .fidelity-tab { border-right: none; border-bottom: 1px solid var(--paper-2); }
+      .hero-mock { grid-template-columns: 1fr 1fr; }
+      .hero-stat { min-width: 100px; }
+      .learning-item { grid-template-columns: 1fr; }
+      .learning-q { white-space: normal; }
+    }
+    @media (max-width: 480px) {
+      .results-grid { grid-template-columns: 1fr; }
+      .hero-mock { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">Hyeonin Riley Gu</a>
+    <a class="nav-back" href="index.html">← Back to work</a>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <span class="pill">Case Study</span>
+        <span class="pill">Finance · Web App</span>
+        <span class="pill">Nov 2025 – Present</span>
+        <span class="pill pill-accent">Lead Product Designer</span>
+      </div>
+      <h1 class="hero-title">Paylo —<br>Unified <em>Finance</em><br>Web App</h1>
+      <p class="hero-subtitle">
+        Designing a single, trustworthy home for payments, transfers, and budgeting — replacing the fragmented stack of apps that cause financial anxiety for everyday users.
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hs-num">94%</div>
+          <div class="hs-label">Navigational accuracy after redesign</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hs-num">+82%</div>
+          <div class="hs-label">Improvement from original sitemap</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hs-num">75%</div>
+          <div class="hs-label">Users preferred a unified app</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hs-num">12+</div>
+          <div class="hs-label">Research participants</div>
+        </div>
+      </div>
+
+      <!-- Mock strip -->
+      <div class="hero-mock">
+        <!-- Home -->
+        <div class="mock-screen">
+          <div class="mock-label">Home</div>
+          <div class="mock-title">$12,480.00</div>
+          <div class="mock-bar"><div class="mock-bar-fill" style="width:68%;background:#c8603a;"></div></div>
+          <div class="mock-row"><div style="display:flex;align-items:center;gap:0.4rem;"><div class="mock-dot" style="background:#c8603a;"></div><span class="mock-txt">Netflix</span></div><span class="mock-amt">−$17.99</span></div>
+          <div class="mock-row"><div style="display:flex;align-items:center;gap:0.4rem;"><div class="mock-dot" style="background:#4a90a4;"></div><span class="mock-txt">Transfer in</span></div><span class="mock-amt" style="color:#6db89a;">+$250</span></div>
+          <div class="mock-row"><div style="display:flex;align-items:center;gap:0.4rem;"><div class="mock-dot" style="background:#7a6fbe;"></div><span class="mock-txt">Spotify</span></div><span class="mock-amt">−$11.99</span></div>
+        </div>
+        <!-- Payments -->
+        <div class="mock-screen">
+          <div class="mock-label">Payments · 3-step flow</div>
+          <div style="font-size:0.6rem;color:rgba(255,255,255,0.2);display:flex;gap:0.3rem;margin-bottom:0.4rem;">
+            <span style="color:#e8926e;">① Select</span><span>→ ② Amount</span><span>→ ③ Confirm</span>
+          </div>
+          <div class="mock-row"><span class="mock-txt">Recipient</span><span class="mock-amt">Brandon K.</span></div>
+          <div class="mock-row"><span class="mock-txt">Amount</span><span class="mock-amt">$45.00</span></div>
+          <div class="mock-row"><span class="mock-txt">Fee</span><span class="mock-amt" style="color:#6db89a;">$0.00</span></div>
+          <div style="margin-top:0.5rem;padding:0.5rem;background:#c8603a;border-radius:6px;text-align:center;font-size:0.6rem;color:#fff;">Send now</div>
+        </div>
+        <!-- Budget -->
+        <div class="mock-screen">
+          <div class="mock-label">Budget</div>
+          <div class="mock-title" style="font-size:0.8rem;">Monthly overview</div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span class="mock-txt">Food</span><span class="mock-amt">$320/$400</span></div>
+              <div class="mock-bar"><div class="mock-bar-fill" style="width:80%;background:#e8926e;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span class="mock-txt">Transport</span><span class="mock-amt">$95/$150</span></div>
+              <div class="mock-bar"><div class="mock-bar-fill" style="width:63%;background:#4a90a4;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span class="mock-txt">Savings goal</span><span class="mock-amt">$800/$2000</span></div>
+              <div class="mock-bar"><div class="mock-bar-fill" style="width:40%;background:#6db89a;"></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Account -->
+        <div class="mock-screen">
+          <div class="mock-label">Account</div>
+          <div class="mock-title" style="font-size:0.75rem;">Security hub</div>
+          <div class="mock-row"><span class="mock-txt">Face ID</span><span style="font-size:0.6rem;color:#6db89a;">On</span></div>
+          <div class="mock-row"><span class="mock-txt">2FA</span><span style="font-size:0.6rem;color:#6db89a;">On</span></div>
+          <div class="mock-row"><span class="mock-txt">TD Bank linked</span><span style="font-size:0.6rem;color:rgba(255,255,255,0.3);">●●●● 4821</span></div>
+          <div class="mock-row"><span class="mock-txt">Active sessions</span><span style="font-size:0.6rem;color:rgba(255,255,255,0.3);">2</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- OVERVIEW -->
+  <section class="section">
+    <div class="content">
+      <p class="section-label reveal">Project overview</p>
+      <h2 class="section-title reveal">The problem with<br>fragmented finance</h2>
+      <div class="body-text reveal">
+        <p>People managing their money in 2025 use an average of three to four separate apps — a banking app, a P2P payment tool, a budgeting spreadsheet, and something for tracking goals. Every app switch adds friction, and every time they can't find a transaction or a budget number, anxiety spikes.</p>
+        <p>Paylo was designed to eliminate that fragmentation: one app for payments, transfers, and budgeting — fast enough for the person who just wants to send money to a friend, and organized enough for the person who needs to see where every dollar went this month.</p>
+      </div>
+
+      <div class="overview-grid reveal">
+        <div class="ov-cell">
+          <div class="ov-cell-label">My role</div>
+          <div class="ov-cell-val"><strong>Lead Product Designer</strong><br>End-to-end: research, IA, wireframing, prototyping (lo → mid → hi-fi), usability testing, and iteration.</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-cell-label">Timeline</div>
+          <div class="ov-cell-val">November 2025 – Present<br><span style="font-size:0.85rem;color:var(--ink-3);">~4 months</span></div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-cell-label">Tools</div>
+          <div class="ov-cell-val">Figma · FigJam<br>Optimal Workshop<br>Google Survey · Zoom</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section class="section">
+    <div class="content">
+      <p class="section-label reveal">01 — Research</p>
+      <h2 class="section-title reveal">Understanding the real pain</h2>
+      <div class="body-text reveal">
+        <p>I conducted a mixed-method research phase with 12 survey participants and 5 in-depth interviews with adults aged 25–45 who regularly use payment and budgeting apps. The goal was not to validate assumptions — it was to uncover what genuinely causes stress, confusion, and distrust in financial tools.</p>
+        <p>One finding surfaced in every session: <strong>managing finances feels harder than it should.</strong> Users weren't struggling because of a lack of features — they were overwhelmed by the number of places they had to look.</p>
+      </div>
+
+      <div class="insight-grid reveal">
+        <div class="insight-card">
+          <div class="insight-icon">🔍</div>
+          <div class="insight-title">Transparency</div>
+          <div class="insight-body">Users want real-time progress, visible fees ($0.00 displayed before confirmation), and clear transaction statuses. Vague "Processing…" messages triggered anxiety that money was lost.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon">⚡</div>
+          <div class="insight-title">Speed builds trust</div>
+          <div class="insight-body">Slow transfers were tied directly to distrust. David (data analyst) checked his accounts multiple times per day to confirm transactions had landed — a behavior driven entirely by app lag.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon">🗂️</div>
+          <div class="insight-title">Simplicity</div>
+          <div class="insight-body">25% of survey respondents cited confusing navigation as their top frustration. Technical jargon and too many steps made users feel incompetent, not uninformed.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon">🎯</div>
+          <div class="insight-title">One app expectation</div>
+          <div class="insight-body">75% of participants expressed a strong preference for replacing multiple tools with a single unified app. Olivia (event planner) switched between 3 apps daily just to track her budget.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERSONAS -->
+  <section class="section">
+    <div class="content">
+      <p class="section-label reveal">02 — Personas</p>
+      <h2 class="section-title reveal">Two types of user,<br>one unified solution</h2>
+      <div class="body-text reveal">
+        <p>Research revealed a clear split: users who primarily <strong>move money</strong> (Transactors) and users who primarily <strong>analyze money</strong> (Budgeters). Paylo had to serve both without compromising on either.</p>
+      </div>
+
+      <div class="persona-grid reveal">
+        <div class="persona-card">
+          <div class="persona-header">
+            <div class="persona-avatar" style="background:#c8603a;">EL</div>
+            <div>
+              <div class="persona-name">Elaine · 34</div>
+              <div class="persona-role">Event Planner · Toronto</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div>
+              <div class="persona-row-label">Goal</div>
+              <div class="persona-row-val">Total financial clarity — separate business and personal spending, stay within monthly limits without manual effort.</div>
+            </div>
+            <div>
+              <div class="persona-row-label">Frustrations</div>
+              <div class="persona-row-val">Wrong auto-categorization, switching between 3 apps to see a full picture, and text-heavy reports with no visual summary.</div>
+            </div>
+            <div class="persona-quote">"I need a dashboard that shows me where every dollar is going. I want control, not confusion."</div>
+          </div>
+        </div>
+
+        <div class="persona-card">
+          <div class="persona-header">
+            <div class="persona-avatar" style="background:#1c4a8a;">BR</div>
+            <div>
+              <div class="persona-name">Brandon · 28</div>
+              <div class="persona-role">Software Developer · Vancouver</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div>
+              <div class="persona-row-label">Goal</div>
+              <div class="persona-row-val">Complete tasks instantly. Biometric login, real-time transaction status, and minimal steps to send money.</div>
+            </div>
+            <div>
+              <div class="persona-row-label">Frustrations</div>
+              <div class="persona-row-val">Slow loading screens, re-authenticating multiple times, and vague "processing" messages that feel like the money is lost.</div>
+            </div>
+            <div class="persona-quote">"If the app doesn't have Face ID, I won't use it. I need military-grade security that works in one second."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNEY MAP -->
+  <section class="section">
+    <div class="content">
+      <p class="section-label reveal">03 — Journey mapping</p>
+      <h2 class="section-title reveal">Where the emotional pain lives</h2>
+      <div class="body-text reveal">
+        <p>Mapping Brandon's P2P payment journey revealed that frustration peaked not during the transfer itself, but in the waiting period afterward — the absence of clear feedback created more anxiety than the act of sending money. This directly informed the 3-step payment flow with instant confirmation.</p>
+      </div>
+
+      <div class="journey-strip reveal">
+        <table class="journey-table">
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Action</th>
+              <th>Thought</th>
+              <th>Pain point</th>
+              <th>Emotion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Trigger</td>
+              <td>Opens phone to pay friend back</td>
+              <td>"Why can't this just be one step?"</td>
+              <td>No seamless quick-access</td>
+              <td><span class="emotion emotion-bad">Irritated</span></td>
+            </tr>
+            <tr>
+              <td>Login</td>
+              <td>Types full password + 2FA code</td>
+              <td>"This is taking too long."</td>
+              <td>No biometric option, multi-step auth</td>
+              <td><span class="emotion emotion-bad">Frustrated</span></td>
+            </tr>
+            <tr>
+              <td>Review</td>
+              <td>Looks for fee info on confirm screen</td>
+              <td>"Is there a hidden fee this time?"</td>
+              <td>Hidden fees, unclear timing</td>
+              <td><span class="emotion emotion-ok">Cautious</span></td>
+            </tr>
+            <tr>
+              <td>Wait</td>
+              <td>Sees "Processing…" for 3–5 minutes</td>
+              <td>"Is my money stuck somewhere?"</td>
+              <td>Vague status messaging</td>
+              <td><span class="emotion emotion-bad">Anxious</span></td>
+            </tr>
+            <tr>
+              <td>Verify</td>
+              <td>Checks two separate apps to confirm</td>
+              <td>"I need to be absolutely sure."</td>
+              <td>No consolidated confirmation view</td>
+              <td><span class="emotion emotion-good">Relieved</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section">
+    <div class="content">
+      <p class="section-label reveal">04 — Design process</p>
+      <h2 class="section-title reveal">From assumption to evidence</h2>
+
+      <div class="process-steps reveal">
+        <div class="process-step">
+          <div class="step-num active">1</div>
+          <div class="step-content">
+            <div class="step-title">Information architecture + card sorting</div>
+            <div class="step-body">The first sitemap was built on assumptions and landed at just 32% accuracy. I ran a closed card sorting test with 8 participants using Optimal Workshop to understand how users actually group financial tasks. The result was a restructured sitemap with a hard divide between Payments (action) and Budget (analysis) — the split that users naturally expected but no existing app had implemented clearly.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num active">2</div>
+          <div class="step-content">
+            <div class="step-title">Low-fidelity wireframes</div>
+            <div class="step-body">Lo-fi focused purely on layout and information hierarchy. Each screen was centered on a single primary task to minimize cognitive load. Sketched both mobile (4-tab bottom nav) and desktop (side-by-side panel) layouts, validating the dual-persona model — fast vertical flows for Brandon, parallel deep-dive panels for Elaine.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num active">3</div>
+          <div class="step-content">
+            <div class="step-title">Mid-fidelity prototype + usability testing</div>
+            <div class="step-body">Mid-fi introduced spacing, visual grouping, and the 3-step P2P payment flow. Usability testing with 5 participants across two days (Jan–Feb 2026) focused on task completion, error rates, and emotional response during high-risk moments like payment confirmation. The $0.00 fee label and instant transaction ID were added directly in response to testing observations.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">High-fidelity prototype</div>
+            <div class="step-body">Hi-fi introduced brand visuals, realistic data, and consistent interaction patterns. Animated transitions and clear visual hierarchy guide users through end-to-end flows. The key learning: high fidelity is about refining clarity and trust, not adding decoration. Small details — wording, feedback timing, visual hierarchy — proved to have an outsized effect on user confidence in a finance context.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SITEMAP RESULTS -->
+  <section class="section">
+    <div class="content-wide">
+      <div class="content" style="padding:0;">
+        <p class="section-label reveal">05 — Card sorting results</p>
+        <h2 class="section-title reveal">Accuracy jumped from 32% to 94%</h2>
+        <div class="body-text reveal">
+          <p>The closed card sort with 8 participants produced a +62% accuracy improvement overall, with the biggest gains in Payments and Budget — the two sections that mattered most for the core flows.</p>
+        </div>
+      </div>
+
+      <div class="results-grid reveal">
+        <div class="result-card">
+          <div class="result-section">Home dashboard</div>
+          <div class="result-before">~40%</div>
+          <div class="result-arrow">→ before</div>
+          <div class="result-after">85%</div>
+          <div class="result-arrow">after testing</div>
+          <div style="font-size:0.8rem;color:var(--ink-3);line-height:1.5;">Narrowed to quick-access, high-frequency tasks only. Moved analysis features to Budget tab.</div>
+        </div>
+        <div class="result-card">
+          <div class="result-section">Payments</div>
+          <div class="result-before">~20%</div>
+          <div class="result-arrow">→ before</div>
+          <div class="result-after">100%</div>
+          <div class="result-arrow">after testing</div>
+          <div style="font-size:0.8rem;color:var(--ink-3);line-height:1.5;">Became a complete money movement hub. Scheduled transfers & rules moved here from Home.</div>
+        </div>
+        <div class="result-card">
+          <div class="result-section">Budget</div>
+          <div class="result-before">~33%</div>
+          <div class="result-arrow">→ before</div>
+          <div class="result-after">100%</div>
+          <div class="result-arrow">after testing</div>
+          <div style="font-size:0.8rem;color:var(--ink-3);line-height:1.5;">Analysis and goal-setting consolidated here. Visual charts replaced text-heavy tables.</div>
+        </div>
+        <div class="result-card">
+          <div class="result-section">Account & Settings</div>
+          <div class="result-before">~50%</div>
+          <div class="result-arrow">→ before</div>
+          <div class="result-after">94%</div>
+          <div class="result-arrow">after testing</div>
+          <div style="font-size:0.8rem;color:var(--ink-3);line-height:1.5;">Became a full security hub — biometrics, 2FA, linked accounts, and active sessions in one place.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROTOTYPE FIDELITY -->
+  <section class="section">
+    <div class="content">
+      <p class="section-label reveal">06 — Prototype evolution</p>
+      <h2 class="section-title reveal">Three fidelities,<br>one clear direction</h2>
+
+      <div class="fidelity-tabs reveal" id="fidelity-tabs">
+        <button class="fidelity-tab active" onclick="switchTab(0)">
+          <div class="ft-label">Phase 1</div>
+          <div class="ft-title">Low-fidelity</div>
+        </button>
+        <button class="fidelity-tab" onclick="switchTab(1)">
+          <div class="ft-label">Phase 2</div>
+          <div class="ft-title">Mid-fidelity</div>
+        </button>
+        <button class="fidelity-tab" onclick="switchTab(2)">
+          <div class="ft-label">Phase 3</div>
+          <div class="ft-title">High-fidelity</div>
+        </button>
+      </div>
+
+      <div class="fidelity-content active" id="tab-0">
+        <div class="fidelity-panel">
+          <div class="fidelity-panel-title">Establishing structure and hierarchy</div>
+          <div class="fidelity-panel-body">Lo-fi focused on layout decisions, not visual design. Each screen was constrained to a single primary task. The 4-tab bottom navigation (Home, Payments, Budget, Account) was validated at this stage — grounding the app in the card sort findings.</div>
+          <div class="fidelity-features">
+            <div class="fidelity-feature">4-tab bottom navigation validated against card sort results</div>
+            <div class="fidelity-feature">Mobile-first: single-task screens to reduce cognitive load</div>
+            <div class="fidelity-feature">Desktop: full-width layouts with parallel panels for Elaine's use case</div>
+            <div class="fidelity-feature">Content grouping tested with paper prototypes before digitizing</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fidelity-content" id="tab-1">
+        <div class="fidelity-panel">
+          <div class="fidelity-panel-title">Improving usability through clarity</div>
+          <div class="fidelity-panel-body">Mid-fi introduced spacing, alignment, and visual grouping. The 3-step payment flow was implemented here and tested in usability sessions. Status pills (Active, Pending) and the $0.00 fee label were added in direct response to testing observations — users needed to see transparency, not just trust that it was there.</div>
+          <div class="fidelity-features">
+            <div class="fidelity-feature">3-step P2P flow: Start → Amount → Confirm (validated in testing)</div>
+            <div class="fidelity-feature">$0.00 fee prominently displayed before final confirmation tap</div>
+            <div class="fidelity-feature">Onboarding coach marks to address the 25% navigation frustration</div>
+            <div class="fidelity-feature">Standardized status pills replacing vague "Processing" states</div>
+            <div class="fidelity-feature">Visual progress bars for budget goals replacing static number tables</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fidelity-content" id="tab-2">
+        <div class="fidelity-panel">
+          <div class="fidelity-panel-title">Building trust through visual polish</div>
+          <div class="fidelity-panel-body">Hi-fi introduced brand visuals, realistic data, and consistent interaction patterns. The key insight from this phase: high fidelity means refining clarity, not adding complexity. Checkbox toggles became switch controls for security settings. Color-coded budget status (safe/warning/exceeded) replaced manual calculation. Every screen was optimized so the most important action was immediately visible without scrolling.</div>
+          <div class="fidelity-features">
+            <div class="fidelity-feature">Animated step indicators guide users through the payment flow</div>
+            <div class="fidelity-feature">Color-coded budget status system: safe (green), warning (amber), exceeded (red)</div>
+            <div class="fidelity-feature">Triple-locked security: Biometrics + PIN + Alerts visible in Account tab</div>
+            <div class="fidelity-feature">Responsive design: mobile vertical flow ↔ desktop parallel panel layout</div>
+            <div class="fidelity-feature">Dedicated support panel during high-risk actions (payments) to reduce anxiety</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUTCOMES -->
+  <section class="section">
+    <div class="content">
+      <p class="section-label reveal">07 — Outcomes</p>
+      <h2 class="section-title reveal">What changed for users</h2>
+
+      <div class="outcome-grid reveal">
+        <div class="outcome-card">
+          <div class="outcome-num">94%</div>
+          <div class="outcome-title">Navigational accuracy</div>
+          <div class="outcome-body">Up from 32% with the assumption-driven sitemap. Users could find every feature in the restructured app without guidance.</div>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-num">3</div>
+          <div class="outcome-title">Steps to complete a P2P payment</div>
+          <div class="outcome-body">Down from a multi-step flow with re-authentication friction. Start → Amount → Confirm, with instant status feedback.</div>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-num">75%</div>
+          <div class="outcome-title">Preference for unified app</div>
+          <div class="outcome-body">Research confirmed the core product direction — users didn't want more features, they wanted fewer apps.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEARNINGS -->
+  <section class="section">
+    <div class="content">
+      <p class="section-label reveal">08 — Reflections</p>
+      <h2 class="section-title reveal">What I learned</h2>
+
+      <div class="learning-list reveal">
+        <div class="learning-item">
+          <div class="learning-q">On prototyping</div>
+          <div class="learning-a">High fidelity doesn't mean adding more decoration or interactions — it means refining clarity and trust. Moving from mid-fi to hi-fi showed me how much small details like wording, feedback timing, and visual hierarchy affect user confidence, especially in finance-related products.</div>
+        </div>
+        <div class="learning-item">
+          <div class="learning-q">On research</div>
+          <div class="learning-a">The card sort was humbling. The original sitemap felt logical to me — but 32% accuracy proved that what makes sense to a designer rarely matches how real users organize information. The data taught me to distrust my assumptions early and test them cheaply.</div>
+        </div>
+        <div class="learning-item">
+          <div class="learning-q">On scope</div>
+          <div class="learning-a">The biggest temptation in hi-fi was scope creep — adding new features instead of polishing core flows. Resisting that and focusing on the Send Money flow, the Budget overview, and the security hub produced a much more coherent, trustworthy product.</div>
+        </div>
+        <div class="learning-item">
+          <div class="learning-q">Next steps</div>
+          <div class="learning-a">I would validate the design through usability testing focused on key tasks — sending money and reviewing budgets — measuring task completion time, error rates, and user confidence during high-risk moments like confirmations. I'd also test whether transaction status and spending insights are understood without additional explanation.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div style="border-top:1px solid var(--paper-2);">
+    <div class="cta-strip">
+      <p class="cta-text">Like what you see?<br>Let's <em>work together.</em></p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <a href="mailto:ghihm0830@gmail.com" class="btn btn-primary">Get in touch ↗</a>
+        <a href="index.html" class="btn btn-ghost">← Back to work</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Hyeonin Riley Gu</p>
+    <p>Designed & built by Hyeonin Riley Gu · Toronto</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Fidelity tabs
+    function switchTab(index) {
+      document.querySelectorAll('.fidelity-tab').forEach((t, i) => t.classList.toggle('active', i === index));
+      document.querySelectorAll('.fidelity-content').forEach((c, i) => c.classList.toggle('active', i === index));
+    }
+  </script>
+</body>
+</html>
