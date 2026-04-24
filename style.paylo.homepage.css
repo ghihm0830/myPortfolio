@@ -156,14 +156,120 @@
     .qb{background:#111;border-radius:1px}.qw{background:transparent}
 
     /* ── FEATURES INTRO (3 cards) ── */
-    .feat-intro{padding:3.5rem var(--g);background:#fff}
-    .feat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;max-width:var(--max);margin:0 auto}
-    .feat-card{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/3;position:relative;cursor:default}
-    .feat-card-bg{position:absolute;inset:0}
-    .feat-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.1) 55%,transparent 100%)}
-    .feat-card-text{position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.25rem 1.25rem}
+    .feat-intro{
+        padding:3.5rem var(--g);
+        background:#fff 
+    }
+
+    .feat-cards{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:1.25rem;
+        max-width:var(--max);
+        margin:0 auto;
+    }
+
+    .feat-card{
+        border-radius:var(--r-lg);
+        overflow:hidden;
+        aspect-ratio:4/3;
+        position:relative;
+        cursor:default;
+        border-radius: 24px;
+        /* cursor: pointer; */
+
+        transition:transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .feat-card-bg{
+        position:absolute;
+        inset:0;
+
+        transition: transform 0.6s ease, filter 0.4s ease;
+    }
+
+    .feat-card-overlay{
+        position:absolute;
+        inset:0;
+        background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.1) 55%,transparent 100%);
+        /* position: relative; */
+        /* z-index: 2; */
+
+        transition: transform 0.5s ease;
+    }
+
+    .feat-card-overlay .img {
+        width: 100%;
+        /* height: auto; */
+        transition: transform 0.6s ease;
+    }
+
+    .feat-card-text{
+        position:absolute;
+        bottom:0;
+        left:0;
+        right:0;
+        padding:1.5rem 1.25rem 1.25rem;
+        /* position: relative;
+        z-index: 3;
+        padding: 20px;
+        color: white; */
+        transition: transform 0.4s ease, opacity 0.4s ease;
+    
+    }
+
     .feat-card-text h3{font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:.3rem}
-    .feat-card-text p{font-size:.75rem;color:rgba(255,255,255,.65);line-height:1.5}
+    .feat-card-text p{font-size:.75rem;color:rgba(255,255,255,.85);line-height:1.5}
+
+    /* ✨ HOVER EFFECT */
+    .feat-card:hover {
+        transform: translateY(-12px) scale(1.03);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Background animates slightly */
+    .feat-card:hover .feat-card-bg {
+        transform: scale(1.1);
+        filter: brightness(1.1);
+    }
+
+    /* Image zooms in */
+        .feat-card:hover .feat-card-overlay .img {
+        transform: scale(1.08);
+    }
+
+    /* Text rises slightly */
+        .feat-card:hover .feat-card-text {
+        transform: translateY(-4px);
+    }
+
+    /* Optional glow effect */
+    .feat-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+
+        background: radial-gradient(
+            circle at top,
+            rgba(255,255,255,0.25),
+            transparent 60%
+        );
+    }
+
+    .feat-card:hover::after {
+        opacity: 1;
+    }
+
+    .feat-card-container:hover .feat-card {
+        opacity: 0.6;
+    }
+
+    .feat-card-container:hover .feat-card:hover {
+        opacity: 1;
+    }
 
     /* ── FEATURE ROW BASE ── */
     .feat-row{padding:5.5rem var(--g)}
@@ -178,10 +284,27 @@
     .check-list li{display:flex;align-items:flex-start;gap:.6rem;font-size:.9rem;color:var(--ink3)}
     .check-list li::before{content:'✓';color:var(--teal);font-weight:700;font-size:.85rem;flex-shrink:0;margin-top:.12rem}
 
-    .feat-visual{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:16/11;background:var(--bg2);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 8px 40px rgba(0,0,0,.07)}
+    .feat-visual{
+        border-radius:var(--r-lg);
+        overflow:hidden;
+        aspect-ratio:16/11;
+        background:var(--bg2);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        position:relative;
+        box-shadow:0 8px 40px rgba(0,0,0,.07);
+    }
 
     /* ── MOCK SCREENS for feature rows ── */
-    .mock{font-family:var(--sans);font-size:11px;width:88%;border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12);background:#fff}
+    .mock{
+        font-family:var(--sans);
+        font-size:11px;width:88%;
+        border-radius:14px;overflow:hidden;
+        box-shadow:0 8px 32px rgba(0,0,0,.12);
+        background:#fff;
+    }
+
     .mock-hd{background:var(--teal);padding:14px 16px 12px;color:#fff}
     .mock-hd-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:8px}
     .mock-hd-row{display:flex;gap:6px}
