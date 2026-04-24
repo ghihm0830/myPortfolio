@@ -72,6 +72,7 @@
         background: #1a9e8f;
         position: sticky;
         top: 10vh;
+        padding: 0 20px;
 
         width: 430px;
         height: 700px;
@@ -88,6 +89,7 @@
         width: 100vw;
         height: 100vh;
         border-radius: 0;
+        padding: 0;
     }
 
     /* Screen + image always fill */
@@ -104,7 +106,7 @@
 
     .phone-notch{
         width:70px;
-        height:48px;
+        height:64px;
         background: var(--teal);
         border-radius:0 0 14px 14px;
         margin:0 auto;
@@ -150,10 +152,84 @@
     .app-action-label{font-size:7.5px;font-weight:600;color:var(--ink3)}
 
     /* QR card */
-    .qr-card{background:#fff;border-radius:14px;padding:12px;box-shadow:0 8px 32px rgba(0,0,0,.1);align-self:flex-end;margin-bottom:1.5rem}
-    .qr-label{font-size:7.5px;color:var(--ink4);text-align:center;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase;font-weight:500}
-    .qr{width:64px;height:64px;display:grid;grid-template-columns:repeat(8,1fr);gap:1.5px}
-    .qb{background:#111;border-radius:1px}.qw{background:transparent}
+    .qr-card{
+        background: #fff;
+        position: fixed;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+
+        width: fit-content;
+        height: auto;
+        padding: 14px;
+
+        background: white;
+        border-radius: 14px;
+
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+
+        z-index: 999;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        animation: float 4s ease-in-out infinite;
+                
+
+        /* padding:12px;
+        box-shadow:0 8px 32px rgba(0,0,0,.1);
+        align-self:flex-end;
+        margin-bottom:1.5rem */
+    }
+
+    /* Hover lift */
+    .qr-card:hover {
+        transform: translateY(-50%) translateY(-6px);
+        box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+    }
+
+    /* QR grid */
+
+    .qr-label{
+        font-size:7.5px;
+        color:var(--ink4);
+        text-align:center;
+        margin-bottom:10px;
+        letter-spacing:.04em;
+        text-transform:uppercase;
+        font-weight:500;
+    }
+    .qr{
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 2px;
+        place-self: center;
+        
+        width:64px;
+        height:64px;
+    }
+    .qb{
+        background:#111;
+        border-radius:1px;
+
+        width: 100%;
+        padding-top: 100%;
+    }.qw{
+        background:transparent;
+
+        width: 100%;
+        padding-top: 100%;
+    }
+
+/* Hide on mobile */
+    @media (max-width: 768px) {
+        .qr-card {
+            display: none;
+        }
+    }
+/* Slight floating animation */
+    @keyframes float {
+        0%, 100% { transform: translateY(-50%) translateY(0); }
+        50% { transform: translateY(-50%) translateY(-6px); }
+    }
 
     /* ── FEATURES INTRO (3 cards) ── */
     .feat-intro{
@@ -383,11 +459,63 @@
     .testi-heading{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:800;color:var(--ink);margin-bottom:.5rem;letter-spacing:-.02em}
     .testi-sub{font-size:.9rem;color:var(--ink3);margin-bottom:3rem}
     .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;text-align:left}
-    .testi-card{background:var(--bg);border-radius:var(--r);padding:1.75rem}
+
+    .testi-card{
+        background:var(--bg);
+        border-radius:var(--r);
+        padding:1.75rem;
+
+        position: relative;
+
+        transition: 
+            transform 0.35s ease,
+            box-shadow 0.35s ease;
+
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        cursor: default;
+    }
+
     .stars{color:#f59e0b;font-size:.9rem;letter-spacing:.05rem;margin-bottom:1rem}
     .testi-body{font-size:.875rem;color:var(--ink3);line-height:1.75;font-style:italic;margin-bottom:1.25rem}
     .testi-name{font-size:.825rem;font-weight:700;color:var(--ink)}
     .testi-role{font-size:.775rem;color:var(--ink4);margin-top:.15rem}
+
+    /* ✨ HOVER EFFECT */
+    .testi-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+        border: solid var(--teal) 2px;
+    }
+
+    /* stars slightly pop */
+    .testi-card:hover .stars {
+        transform: scale(1.1);
+    }
+
+    /* text becomes a bit darker for emphasis */
+    .testi-card:hover .testi-body {
+        color: #111;
+    }
+
+    /* subtle glow overlay */
+    .testi-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+
+        /* background: radial-gradient(
+            circle at top left,
+            rgba(0,0,0,0.04),
+            transparent 60%
+        ); */
+    }
+
+    .testi-card:hover::after {
+        opacity: 1;
+    }
 
     /* ── CTA BANNER ── */
     .cta-banner{background:var(--teal);padding:5.5rem var(--g);text-align:center;position:relative;overflow:hidden}
@@ -395,10 +523,23 @@
     .cta-banner h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:.75rem;position:relative}
     .cta-banner p{font-size:1rem;color:rgba(255,255,255,.75);margin-bottom:2.5rem;position:relative}
     .cta-scan-label{font-size:.78rem;color:rgba(255,255,255,.6);margin-bottom:1rem;letter-spacing:.04em;position:relative}
-    .cta-qr-wrap{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;position:relative}
+    .cta-qr-wrap{
+        display:flex; 
+        flex-direction:column; 
+        align-items:center;
+        justify-content:center;
+        gap:2rem;
+        flex-wrap:wrap;
+        position:relative
+    }
     .cta-qr-box{background:#fff;border-radius:16px;padding:1.25rem;display:inline-block}
     .qr-lg{width:100px;height:100px;display:grid;grid-template-columns:repeat(10,1fr);gap:2px}
-    .cta-btns{display:flex;flex-direction:column;align-items:flex-start;gap:.65rem}
+    .cta-btns{
+        display:flex;
+        flex-direction:row;
+        align-items:flex-start;
+        gap:.65rem
+    }
 
     /* ── FOOTER ── */
     footer{background:#0d1117;padding:3.5rem var(--g) 1.75rem}
@@ -407,8 +548,8 @@
     .foot-logo{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:1.05rem;color:#fff;margin-bottom:.85rem}
     .foot-logo-mark{width:26px;height:26px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center}
     .foot-logo-mark svg{width:14px;height:14px;fill:#fff}
-    .foot-tagline{font-size:.8rem;color:rgba(255,255,255,.35);line-height:1.65;max-width:210px}
-    .foot-col h4{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.9rem}
+    .foot-tagline{font-size:.8rem;color:rgba(255,255,255,.65);line-height:1.65;max-width:210px}
+    .foot-col h4{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.9rem}
     .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
     .foot-col a{font-size:.825rem;color:rgba(255,255,255,.55);transition:color .15s}
     .foot-col a:hover{color:#fff}
